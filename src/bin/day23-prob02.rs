@@ -158,7 +158,7 @@ mod test {
         assert_eq!(cups, VecDeque::from(vec![8u32, 3, 7, 4, 1, 9, 2, 6, 5]))
     }
 
-    // test takes 1.25h to run :(
+    // test takes 45m to run :(
     // #[test]
     // fn test_steps() {
     //     assert_eq!(
