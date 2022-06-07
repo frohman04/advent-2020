@@ -56,7 +56,11 @@ impl Tile {
     pub fn from_pixels(id: usize, pixels: Vec<Vec<bool>>) -> Tile {
         let edges = {
             let top = pixels[0].clone();
-            let bottom = pixels[pixels.len() - 1].clone().into_iter().rev().collect::<Vec<bool>>();
+            let bottom = pixels[pixels.len() - 1]
+                .clone()
+                .into_iter()
+                .rev()
+                .collect::<Vec<bool>>();
             let left = pixels
                 .iter()
                 .map(|row| row[0].clone())
@@ -225,8 +229,8 @@ fn assemble_tiles(tiles: Vec<Rc<Tile>>) -> Vec<Vec<Rc<Tile>>> {
         let mut current: Vec<Rc<Tile>> = Vec::new();
         current.push(first_tile.clone());
 
-        while has_match(&current.last().unwrap().forward_edges, &1, &cache) ||
-            has_match(&current.last().unwrap().backward_edges, &1, &cache)
+        while has_match(&current.last().unwrap().forward_edges, &1, &cache)
+            || has_match(&current.last().unwrap().backward_edges, &1, &cache)
         {
             let next_tile = find_next_tile(&current.last().unwrap(), 1, &cache, &mut tiles_by_id);
             current.push(next_tile);
@@ -297,12 +301,10 @@ fn find_next_tile(
     Rc::new(next_tile.translate(flip, rotate * 90))
 }
 
-fn has_match(
-    edge: &Vec<u16>,
-    edge_id: &usize,
-    cache: &HashMap<u16, HashSet<usize>>
-) -> bool {
-    cache.get(&edge[*edge_id]).map_or(false, |ids| ids.len() > 1)
+fn has_match(edge: &Vec<u16>, edge_id: &usize, cache: &HashMap<u16, HashSet<usize>>) -> bool {
+    cache
+        .get(&edge[*edge_id])
+        .map_or(false, |ids| ids.len() > 1)
 }
 
 fn is_unmatched_edge(
@@ -310,7 +312,8 @@ fn is_unmatched_edge(
     edge_i: &usize,
     cache: &HashMap<u16, HashSet<usize>>,
 ) -> bool {
-    !has_match(&tile.forward_edges, edge_i, cache) && !has_match(&tile.backward_edges, edge_i, cache)
+    !has_match(&tile.forward_edges, edge_i, cache)
+        && !has_match(&tile.backward_edges, edge_i, cache)
 }
 
 fn get_tiles_by_matching_edges(
